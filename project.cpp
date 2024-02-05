@@ -53,7 +53,6 @@ namespace std {
 
 #include <cmath>
 
-// Function to calculate the cumulative distribution function of the standard normal distribution
 /**
  * @brief Calculates the cumulative distribution function of the standard normal distribution.
  * @param value The value at which to evaluate the CDF.
