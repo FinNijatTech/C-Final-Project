@@ -15,16 +15,14 @@
     #define M_PI 3.14159265358979323846
 #endif
 
-// Option class and other definitions remain the same...
-
 
 class Option {
 public:
     enum class Type { Call, Put };
-    Type type;
-    double strike;
-    double timeToExpiry;
-    double position;
+    Type type; // Call or Put
+    double strike; // Strike price
+    double timeToExpiry; // Time to expiry in years
+    double position; // Number of contracts
 
     Option(Type type, double strike, double timeToExpiry, double position)
         : type(type), strike(strike), timeToExpiry(timeToExpiry), position(position) {}
@@ -53,10 +51,15 @@ namespace std {
 
 #include <cmath>
 
+// Function to calculate the cumulative distribution function of the standard normal distribution
+
 double normcdf(double value) {
     return 0.5 * erfc(-value * std::sqrt(0.5));
 }
 
+// Function to calculate the Black-Scholes delta of an option
+// This function uses the Black-Scholes formula to calculate the delta of an option
+// The delta is the rate of change of the option price with respect to the price of the underlying asset
 double blackScholesDelta(const Option& option, double S, double sigma, double r) {
     double T = option.timeToExpiry;
     double K = option.strike;
@@ -108,7 +111,7 @@ std::vector<double> monteCarloSimulation(const Option& option, double S0, double
     return simulatedPayoffs;
 }
 
-
+// Function to calculate the mean, variance, and standard deviation of a set of data
 void calculateStatistics(const std::vector<double>& data, double& mean, double& variance, double& stdDev) {
     double sum = 0.0;
     double sqSum = 0.0;
@@ -124,7 +127,7 @@ void calculateStatistics(const std::vector<double>& data, double& mean, double& 
 }
 
 class VarianceCalculator {
-    // Existing private members...
+
  private:
     std::vector<Option> portfolio;
     double portfolioVariance;
@@ -133,7 +136,7 @@ class VarianceCalculator {
     const double underlyingStdDev = 0.2;
     const double annualReturn = 0.05;
 
-
+// The calculateOptionVariance method
     double calculateOptionVariance(const Option &option) {
         auto cachedVariance = varianceCache.find(option);
         if (cachedVariance != varianceCache.end()) {
@@ -147,7 +150,7 @@ class VarianceCalculator {
 
    
 public:
-    // Constructor and other public members remain the same...
+    // Constructor
     VarianceCalculator() : portfolioVariance(0) {}
 
     void addOption(const Option &option) {
@@ -168,7 +171,8 @@ public:
         return portfolio.empty();
     }
 
-
+    // This method calculates the new portfolio variance if a given option is purchased
+    
  struct VarianceInfo {
         double currentVariance;
         double newVariance;
