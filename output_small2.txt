@@ -1,0 +1,24 @@
+After adding option 1:
+Portfolio Payoff Statistics:
+Mean Payoff: 97246
+Variance: 8.15081e+10
+Standard Deviation: 285496
+
+After adding option 2:
+Portfolio Payoff Statistics:
+Mean Payoff: 97048.6
+Variance: 9.84125e+10
+Standard Deviation: 313708
+
+After adding option 3:
+Portfolio Payoff Statistics:
+Mean Payoff: 65693.2
+Variance: 7.2209e+10
+Standard Deviation: 268717
+
+After adding option 4:
+Portfolio Payoff Statistics:
+Mean Payoff: 46576
+Variance: 3.96393e+10
+Standard Deviation: 199096
+

@@ -1,0 +1,150 @@
+After adding option 1:
+Portfolio Payoff Statistics:
+Mean Payoff: 96965.8
+Variance: 8.60055e+10
+Standard Deviation: 293267
+
+After adding option 2:
+Portfolio Payoff Statistics:
+Mean Payoff: 96187
+Variance: 9.05239e+10
+Standard Deviation: 300872
+
+After adding option 3:
+Portfolio Payoff Statistics:
+Mean Payoff: 65534.9
+Variance: 6.3504e+10
+Standard Deviation: 252000
+
+After adding option 4:
+Portfolio Payoff Statistics:
+Mean Payoff: 71627.9
+Variance: 6.04707e+10
+Standard Deviation: 245908
+
+After adding option 5:
+Portfolio Payoff Statistics:
+Mean Payoff: 77700.5
+Variance: 9.2005e+10
+Standard Deviation: 303323
+
+After adding option 6:
+Portfolio Payoff Statistics:
+Mean Payoff: 78807.5
+Variance: 7.79158e+10
+Standard Deviation: 279134
+
+After adding option 7:
+Portfolio Payoff Statistics:
+Mean Payoff: 67052
+Variance: 7.91489e+10
+Standard Deviation: 281334
+
+After adding option 8:
+Portfolio Payoff Statistics:
+Mean Payoff: 58432
+Variance: 5.48642e+10
+Standard Deviation: 234231
+
+After adding option 9:
+Portfolio Payoff Statistics:
+Mean Payoff: 63834.7
+Variance: 7.19947e+10
+Standard Deviation: 268318
+
+After adding option 10:
+Portfolio Payoff Statistics:
+Mean Payoff: 66099.1
+Variance: 6.89409e+10
+Standard Deviation: 262566
+
+After adding option 11:
+Portfolio Payoff Statistics:
+Mean Payoff: 60217.3
+Variance: 6.65366e+10
+Standard Deviation: 257947
+
+After adding option 12:
+Portfolio Payoff Statistics:
+Mean Payoff: 55476.4
+Variance: 5.07479e+10
+Standard Deviation: 225273
+
+After adding option 13:
+Portfolio Payoff Statistics:
+Mean Payoff: 51624.4
+Variance: 5.27561e+10
+Standard Deviation: 229687
+
+After adding option 14:
+Portfolio Payoff Statistics:
+Mean Payoff: 54559.6
+Variance: 7.3752e+10
+Standard Deviation: 271573
+
+After adding option 15:
+Portfolio Payoff Statistics:
+Mean Payoff: 57683.9
+Variance: 6.06523e+10
+Standard Deviation: 246277
+
+After adding option 16:
+Portfolio Payoff Statistics:
+Mean Payoff: 60387.9
+Variance: 5.79203e+10
+Standard Deviation: 240666
+
+After adding option 17:
+Portfolio Payoff Statistics:
+Mean Payoff: 62467.3
+Variance: 8.08412e+10
+Standard Deviation: 284326
+
+After adding option 18:
+Portfolio Payoff Statistics:
+Mean Payoff: 58185.4
+Variance: 5.72567e+10
+Standard Deviation: 239284
+
+After adding option 19:
+Portfolio Payoff Statistics:
+Mean Payoff: 55406.3
+Variance: 5.63574e+10
+Standard Deviation: 237397
+
+After adding option 20:
+Portfolio Payoff Statistics:
+Mean Payoff: 57302.8
+Variance: 5.77988e+10
+Standard Deviation: 240414
+
+After adding option 21:
+Portfolio Payoff Statistics:
+Mean Payoff: 59445
+Variance: 5.88491e+10
+Standard Deviation: 242588
+
+After adding option 22:
+Portfolio Payoff Statistics:
+Mean Payoff: 57115
+Variance: 8.00722e+10
+Standard Deviation: 282970
+
+After adding option 23:
+Portfolio Payoff Statistics:
+Mean Payoff: 54083.3
+Variance: 5.08727e+10
+Standard Deviation: 225550
+
+After adding option 24:
+Portfolio Payoff Statistics:
+Mean Payoff: 52592.5
+Variance: 6.78883e+10
+Standard Deviation: 260554
+
+After adding option 25:
+Portfolio Payoff Statistics:
+Mean Payoff: 53586.6
+Variance: 6.89581e+10
+Standard Deviation: 262599
+

@@ -350,8 +350,8 @@ int main() {
     VarianceCalculator calculator;
     
     // Define file paths for the CSV input and the output text file.
-    std::string filePath = "D:\\Documents\\GitHub\\C-Final-Project\\sample_medium.csv"; // Update this path
-    std::string outputPath = "D:\\Documents\\GitHub\\C-Final-Project\\output_medium1.txt"; // Update this path
+    std::string filePath = "D:\\Documents\\GitHub\\C-Final-Project\\sample_large.csv"; // Update this path
+    std::string outputPath = "D:\\Documents\\GitHub\\C-Final-Project\\output_large2.txt"; // Update this path
     
     // Open the output file in append mode.
     std::ofstream outputFile(outputPath, std::ios::app); 
