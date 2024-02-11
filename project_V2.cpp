@@ -28,6 +28,7 @@ private:
     std::default_random_engine generator;
     std::normal_distribution<double> distribution;
     std::vector<OptionProcess> optionsList;
+    std::string outputDirectory;
 
     double sigma;
     double ttm;
@@ -273,6 +274,14 @@ public:
             std::cerr << "Failed to open file: " << filename << std::endl;
         }
     }
+
+    void setOutputDirectory(const std::string& directory) {
+        outputDirectory = directory;
+    }
+
+    std::string getOutputDirectory() const {
+        return outputDirectory;
+    }
 };
 
 int main() {
@@ -280,6 +289,10 @@ int main() {
         std::string inputFilename;
         std::cout << "Enter the name of the input CSV file (include extension): ";
         std::cin >> inputFilename;
+
+        std::string outputDirectory;
+        std::cout << "Enter the directory for output files: ";
+        std::cin >> outputDirectory;
 
         double meanReturn = 0.05;
         double stdDev = 0.2;
@@ -290,7 +303,9 @@ int main() {
         std::cin >> varianceCutoff;
 
         Model financialModel(spotPrice, meanReturn, stdDev, inputFilename);
+        financialModel.setOutputDirectory(outputDirectory);
         financialModel.runModel(10000, spotPrice, varianceCutoff);
+        
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
