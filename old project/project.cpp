@@ -13,11 +13,6 @@
 
 
 
-#ifndef M_PI
-    #define M_PI 3.14159265358979323846
-#endif
-
-
 class Option {
 public:
     enum class Type { Call, Put };
@@ -350,8 +345,8 @@ int main() {
     VarianceCalculator calculator;
     
     // Define file paths for the CSV input and the output text file.
-    std::string filePath = "D:\\Documents\\GitHub\\C-Final-Project\\sample_medium.csv"; // Update this path
-    std::string outputPath = "D:\\Documents\\GitHub\\C-Final-Project\\output_medium1.txt"; // Update this path
+    std::string filePath = "C:\\Users\\Asus\\Downloads\\exam_27.csv"; // Update this path
+    std::string outputPath = "C:\\Users\\Asus\\Downloads\\exam_27.txt"; // Update this path
     
     // Open the output file in append mode.
     std::ofstream outputFile(outputPath, std::ios::app); 
