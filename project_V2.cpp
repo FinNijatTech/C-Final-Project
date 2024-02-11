@@ -249,7 +249,7 @@ public:
             }
         }
 
-        writeStats(output_matrix, "output_matrix1.csv");
+        writeStats(output_matrix, "output_matrix.csv");
         return output_matrix;
     }
 
