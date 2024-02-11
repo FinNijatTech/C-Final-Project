@@ -155,10 +155,10 @@ public:
 
     // Function to write combined data to a CSV file
     void writeCombined(const std::vector<double>& assetPrices,
-                       const std::vector<std::vector<double>>& optionPayouts,
-                       const std::vector<OptionProcess>& optionsList,
-                       const std::string& filename, size_t numOptions) {
-        std::ofstream outputFile(filename);
+                   const std::vector<std::vector<double>>& optionPayouts,
+                   const std::vector<OptionProcess>& optionsList,
+                   const std::string& filename, size_t numOptions) {
+        std::ofstream outputFile(outputDirectory + "/" + filename);
         if (outputFile.is_open()) {
             outputFile << "Asset_Prices";
             for (size_t j = 0; j < numOptions; ++j) {
@@ -230,7 +230,7 @@ public:
             if (variance > varianceCutoff) {
                 skip = true;
                 if (i == numOptions - 1) {
-                    writeCombined(priceList, optionPayouts, partialOptions, "merged_table.csv", partialOptions.size());
+                    writeCombined(priceList, optionPayouts, partialOptions, "merged_table1.csv", partialOptions.size());
                     std::cout << "Variance cutoff exceeded. Data saved." << std::endl;
                 }
                 continue;
@@ -244,18 +244,18 @@ public:
                     << ", Standard Deviation: " << stdDeviation << std::endl;
 
             if (i == numOptions - 1) {
-                writeCombined(priceList, optionPayouts, partialOptions, "merged_table.csv", partialOptions.size());
+                writeCombined(priceList, optionPayouts, partialOptions, "merged_table1.csv", partialOptions.size());
                 std::cout << "All options processed. Data saved." << std::endl;
             }
         }
 
-        writeStats(output_matrix, "output_matrix.csv");
+        writeStats(output_matrix, "output_matrix1.csv");
         return output_matrix;
     }
 
     // Function to write statistics to a CSV file
     void writeStats(const std::vector<std::vector<double>>& output_matrix, const std::string& filename) {
-        std::ofstream outputFile(filename);
+        std::ofstream outputFile(outputDirectory + "\\" + filename); //output path \\ for windows
         if (outputFile.is_open()) {
             outputFile << "OptionCount,Mean,Variance,StdDeviation\n";
             for (size_t i = 0; i < output_matrix.size(); ++i) {
