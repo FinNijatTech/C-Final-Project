@@ -49,6 +49,7 @@ public:
         generator.seed(rd());
     }
 
+    // Function to split string by delimiter
     std::vector<std::string> splitString(const std::string& s, char delimiter) {
         std::vector<std::string> tokens;
         std::string token;
@@ -59,6 +60,7 @@ public:
         return tokens;
     }
 
+    // Function to load options from CSV file
     bool loadOptionsFromCSV(const std::string& filename) {
         std::ifstream inputFile(filename);
         if (!inputFile.is_open()) {
@@ -87,10 +89,12 @@ public:
         return true;
     }
 
+    // Function to generate a random price
     double generatePrice() {
         return distribution(generator);
     }
 
+    // Function to generate prices
     std::vector<double> generatePrices(int numPrices) {
         std::vector<double> sampledPrices;
         sampledPrices.reserve(numPrices);
@@ -101,6 +105,7 @@ public:
         return sampledPrices;
     }
 
+    // Function to calculate option payouts
     std::vector<std::vector<double>> calculateOptionPayouts(const std::vector<double>& prices, size_t numOptions) const {
         std::vector<std::vector<double>> payouts;
         payouts.reserve(prices.size());
@@ -132,6 +137,7 @@ public:
         return payouts;
     }
 
+    // Function to calculate row sums
     std::vector<double> calculateRowSum(const std::vector<std::vector<double>>& payouts) const {
         std::vector<double> rowSums;
         rowSums.reserve(payouts.size());
@@ -147,6 +153,7 @@ public:
         return rowSums;
     }
 
+    // Function to write combined data to a CSV file
     void writeCombined(const std::vector<double>& assetPrices,
                    const std::vector<std::vector<double>>& optionPayouts,
                    const std::vector<OptionProcess>& optionsList,
@@ -176,11 +183,13 @@ public:
         }
     }
 
+    // Function to run the model
     void runModel(int numPrices, double spotPrice, double varianceCutoff) {
         std::vector<double> priceList = generatePrices(numPrices);
         calculatePortfolioStatistics(optionsList.size(), priceList, varianceCutoff);
     }
 
+    // Function to calculate portfolio statistics
     std::vector<std::vector<double>> calculatePortfolioStatistics(size_t numOptions, const std::vector<double>& priceList, double varianceCutoff) {
         std::vector<std::vector<double>> output_matrix;
 
@@ -188,7 +197,13 @@ public:
         std::vector<std::vector<double>> optionPayouts;
         double mean, variance, stdDeviation;
 
+        bool skip = false;
         for (size_t i = 0; i < numOptions; ++i) {
+            if (skip) {
+                skip = false;
+                continue;
+            }
+
             partialOptions.push_back(optionsList[i]);
             optionPayouts = calculateOptionPayouts(priceList, partialOptions.size());
 
@@ -213,25 +228,34 @@ public:
             stdDeviation = std::sqrt(variance);
 
             if (variance > varianceCutoff) {
-                std::cout << "Variance cutoff exceeded. Data saved and processing stopped." << std::endl;
-                break; // Stop further processing if variance cutoff exceeded
+                skip = true;
+                if (i == numOptions - 1) {
+                    writeCombined(priceList, optionPayouts, partialOptions, "merged_table_small.csv", partialOptions.size());
+                    std::cout << "Variance cutoff exceeded. Data saved." << std::endl;
+                }
+                continue;
             }
 
             output_matrix.push_back({static_cast<double>(partialOptions.size()), mean, variance, stdDeviation});
 
             std::cout << "Option Processed: " << partialOptions.size()
-                      << ", Mean: " << mean
-                      << ", Variance: " << variance
-                      << ", Standard Deviation: " << stdDeviation << std::endl;
+                    << ", Mean: " << mean
+                    << ", Variance: " << variance
+                    << ", Standard Deviation: " << stdDeviation << std::endl;
+
+            if (i == numOptions - 1) {
+                writeCombined(priceList, optionPayouts, partialOptions, "merged_table_small.csv", partialOptions.size());
+                std::cout << "All options processed. Data saved." << std::endl;
+            }
         }
 
-        writeCombined(priceList, optionPayouts, partialOptions, "merged_table_small.csv", partialOptions.size());
         writeStats(output_matrix, "output_matrix_small1.csv");
         return output_matrix;
     }
 
+    // Function to write statistics to a CSV file
     void writeStats(const std::vector<std::vector<double>>& output_matrix, const std::string& filename) {
-        std::ofstream outputFile(outputDirectory + "/" + filename);
+        std::ofstream outputFile(outputDirectory + "\\" + filename); //output path \\ for windows
         if (outputFile.is_open()) {
             outputFile << "OptionCount,Mean,Variance,StdDeviation\n";
             for (size_t i = 0; i < output_matrix.size(); ++i) {
@@ -245,7 +269,6 @@ public:
             }
 
             outputFile.close();
-
             std::cout << "Result matrix has been saved to: " << filename << std::endl;
         } else {
             std::cerr << "Failed to open file: " << filename << std::endl;
@@ -279,15 +302,22 @@ int main() {
         std::cout << "Enter the variance cutoff: ";
         std::cin >> varianceCutoff;
 
+        // Start measuring time
         auto start = std::chrono::high_resolution_clock::now();
 
         Model financialModel(spotPrice, meanReturn, stdDev, inputFilename);
         financialModel.setOutputDirectory(outputDirectory);
         financialModel.runModel(20000, spotPrice, varianceCutoff);
-
+    
+    // End measuring time
         auto end = std::chrono::high_resolution_clock::now();
+
+    // Calculate the elapsed time
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+    // Output the running time
         std::cout << "Running time: " << duration.count() << " milliseconds" << std::endl;
+
 
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;
