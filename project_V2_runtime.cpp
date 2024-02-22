@@ -147,34 +147,7 @@ public:
         return rowSums;
     }
 
-    void writeCombined(const std::vector<double>& assetPrices,
-                   const std::vector<std::vector<double>>& optionPayouts,
-                   const std::vector<OptionProcess>& optionsList,
-                   const std::string& filename, size_t numOptions) {
-        std::ofstream outputFile(outputDirectory + "/" + filename);
-        if (outputFile.is_open()) {
-            outputFile << "Asset_Prices";
-            for (size_t j = 0; j < numOptions; ++j) {
-                const auto& option = optionsList[j];
-                outputFile << ',' << option.CPtype << '|' << option.LSdirection << '|' << option.STR
-                           << '|' << option.timeToMaturity << '|' << option.quantity;
-            }
-            outputFile << "\n";
 
-            for (size_t i = 0; i < assetPrices.size(); ++i) {
-                outputFile << std::fixed << std::setprecision(2) << assetPrices[i];
-                for (size_t j = 0; j < numOptions; ++j) {
-                    outputFile << ',' << optionPayouts[i][j];
-                }
-                outputFile << "\n";
-            }
-
-            outputFile.close();
-            std::cout << "Data has been saved in: " << filename << std::endl;
-        } else {
-            std::cerr << "Failed to open file: " << filename << std::endl;
-        }
-    }
 
     void runModel(int numPrices, double spotPrice, double varianceCutoff) {
         std::vector<double> priceList = generatePrices(numPrices);
@@ -225,7 +198,6 @@ public:
                       << ", Standard Deviation: " << stdDeviation << std::endl;
         }
 
-        writeCombined(priceList, optionPayouts, partialOptions, "merged_table_small.csv", partialOptions.size());
         writeStats(output_matrix, "output_matrix_small1.csv");
         return output_matrix;
     }
