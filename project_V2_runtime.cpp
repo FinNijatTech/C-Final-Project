@@ -255,7 +255,7 @@ int main() {
 
         Model financialModel(spotPrice, meanReturn, stdDev, inputFilename);
         financialModel.setOutputDirectory(outputDirectory);
-        financialModel.runModel(70000, spotPrice, varianceCutoff);
+        financialModel.runModel(50000, spotPrice, varianceCutoff);
 
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
