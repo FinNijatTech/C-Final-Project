@@ -11,17 +11,39 @@
 #include <chrono>
 #include <thread>
 
+/**
+ * @brief Represents an option process
+ * @details The OptionProcess class is responsible for storing the details of an option, such as the type, direction, strike price, time to maturity, and volume
+ */
+
 class OptionProcess {
 public:
-    std::string LSdirection;
-    std::string CPtype;
-    double STR;
-    double timeToMaturity;
-    int quantity;
+    std::string LongShortDirection; // Direction of the option (Long/Short)
+    std::string CallPutType; // Type of the option (Call/Put)
+    double StrikePrice; // Strike price of the option
+    double timeToMaturity; // Time to maturity of the option
+    int volume; // Quantity of options
 
-    OptionProcess(const std::string &t, const std::string &d, double s, double ttm, int q)
-        : CPtype(t), LSdirection(d), STR(s), timeToMaturity(ttm), quantity(q) {}
+
+    /**
+    * @brief Constructor for OptionProcess
+    * @param type Type of the option (Call/Put)
+    * @param direction Direction of the option (Long/Short)
+    * @param strike Strike price of the option
+    * @param maturity Time to maturity of the option
+    * @param quantity Volume of options
+    */
+
+    OptionProcess(const std::string &type, const std::string &direction, double strike, double maturity, int quantity)
+        : CallPutType(type), LongShortDirection(direction), StrikePrice(strike), timeToMaturity(maturity), volume(quantity) {}
 };
+
+
+/**
+ * @brief Represents the financial model for options pricing
+ * @details The Model class is responsible for generating asset prices and calculating the payouts for a given set of options
+ */
+
 
 class Model {
 private:
@@ -31,23 +53,39 @@ private:
     std::string outputDirectory;
 
     double sigma;
-    double ttm;
+    double maturity;
     double spot;
     double mean;
 
 public:
-    Model(double spotPrice, double meanReturn, double stddev, const std::string &filename)
-        : spot(spotPrice), mean(meanReturn), sigma(stddev) {
+
+/**
+ *  @brief Constructor for the Model class
+ *  @param spot Initial spot price
+ *  @param mean Expected mean return
+ *  @param stddev Standard deviation (volatility)
+ *  @param filename Path to the CSV file containing options data
+*/
+
+    Model(double spot, double mean, double stddev, const std::string &filename)
+        : spot(spot), mean(mean), sigma(stddev) {
         if (!loadOptionsFromCSV(filename)) {
             throw std::runtime_error("Failed to open file: " + filename);
         }
 
-        double meanLog = std::log(spot) + (mean - 0.5 * sigma * sigma) * ttm;
-        double sigmaLog = std::sqrt(sigma * sigma * ttm);
+        double meanLog = std::log(spot) + (mean - 0.5 * sigma * sigma) * maturity;
+        double sigmaLog = std::sqrt(sigma * sigma * maturity);
         distribution = std::normal_distribution<double>(meanLog, sigmaLog);
         std::random_device rd;
         generator.seed(rd());
     }
+
+    /**
+    * @brief Splits a string by a given delimiter
+    * @param s The string to split
+    *  @param delimiter The delimiter character
+    *  @return A vector of tokens
+    **/
 
     std::vector<std::string> splitString(const std::string& s, char delimiter) {
         std::vector<std::string> tokens;
@@ -58,6 +96,12 @@ public:
         }
         return tokens;
     }
+
+    /**
+     *  @brief Loads options data from a CSV file
+     * @param filename Path to the CSV file
+     * @return True if successful, False otherwise
+     **/
 
     bool loadOptionsFromCSV(const std::string& filename) {
         std::ifstream inputFile(filename);
@@ -74,7 +118,7 @@ public:
             if (optionData.size() == 5) {
                 if (lineNumber == 1 && !optionData[0].empty()) {
                     optionData[0] = optionData[0].back();
-                    ttm = std::stod(optionData[3]) / 365;
+                    maturity = std::stod(optionData[3]) / 365;
                 }
                 OptionProcess option(optionData[0], optionData[1], std::stod(optionData[2]),
                             std::stod(optionData[3]), std::stoi(optionData[4]));
@@ -87,9 +131,22 @@ public:
         return true;
     }
 
+    /**
+     * @brief Generates a simulated price based on the log-normal distribution
+     * @return A simulated price
+     **/
+
+
     double generatePrice() {
         return distribution(generator);
     }
+    
+    /**
+     * @brief Generates a list of simulated prices
+     * @param numPrices Number of prices to generate
+     * @return A vector of simulated prices
+     * **/
+
 
     std::vector<double> generatePrices(int numPrices) {
         std::vector<double> sampledPrices;
@@ -100,6 +157,13 @@ public:
         }
         return sampledPrices;
     }
+
+    /**
+     * @brief Calculates the payouts for each option given a list of prices
+     * @param prices A vector of simulated asset prices
+     * @param numOptions The number of options to consider for payout calculations
+     * @return A 2D vector containing the payouts for each option at each simulated price
+     * **/
 
     std::vector<std::vector<double>> calculateOptionPayouts(const std::vector<double>& prices, size_t numOptions) const {
         std::vector<std::vector<double>> payouts;
@@ -112,17 +176,17 @@ public:
                 const auto& option = optionsList[j];
                 double optionPayout = 0.0;
 
-                if (option.CPtype == "C") {
-                    optionPayout = std::max(0.0, prices[i] - option.STR);
-                } else if (option.CPtype == "P") {
-                    optionPayout = std::max(0.0, option.STR - prices[i]);
+                if (option.CallPutType == "C") {
+                    optionPayout = std::max(0.0, prices[i] - option.StrikePrice);
+                } else if (option.CallPutType == "P") {
+                    optionPayout = std::max(0.0, option.StrikePrice - prices[i]);
                 }
 
-                if (option.LSdirection == "S") {
+                if (option.LongShortDirection == "S") {
                     optionPayout *= -1;
                 }
 
-                optionPayout *= option.quantity;
+                optionPayout *= option.volume;
                 rowPayouts[j] = optionPayout;
             }
 
@@ -131,6 +195,12 @@ public:
 
         return payouts;
     }
+
+    /**
+     * @brief Calculates the sum of payouts for each price scenario
+     * @param payouts A 2D vector containing the payouts for each option at each simulated price
+     * @return A vector containing the sum of payouts for each price scenario
+     **/
 
     std::vector<double> calculateRowSum(const std::vector<std::vector<double>>& payouts) const {
         std::vector<double> rowSums;
@@ -147,12 +217,26 @@ public:
         return rowSums;
     }
 
+    /**
+     * @brief Runs the model simulation and calculates portfolio statistics
+     * @param numPrices The number of prices to simulate
+     * @param spot The initial spot price
+     * @param varianceCutoff The cutoff for variance beyond which processing stops
+     * **/
 
-
-    void runModel(int numPrices, double spotPrice, double varianceCutoff) {
+    void runModel(int numPrices, double spot, double varianceCutoff) {
         std::vector<double> priceList = generatePrices(numPrices);
         calculatePortfolioStatistics(optionsList.size(), priceList, varianceCutoff);
     }
+    
+    /**
+     * @brief Calculates portfolio statistics for each option and stops processing if variance exceeds a specified cutoff
+     * @param numOptions The number of options to consider
+     * @param priceList A vector of simulated asset prices
+     * @param varianceCutoff The cutoff for variance beyond which processing stops
+     * @return A 2D vector containing statistics (number of options, mean, variance, standard deviation) for each option set
+     * **/
+
 
     std::vector<std::vector<double>> calculatePortfolioStatistics(size_t numOptions, const std::vector<double>& priceList, double varianceCutoff) {
         std::vector<std::vector<double>> output_matrix;
@@ -198,9 +282,14 @@ public:
                       << ", Standard Deviation: " << stdDeviation << std::endl;
         }
 
-        writeStats(output_matrix, "output_matrix_small1.csv");
+        writeStats(output_matrix, "output_matrix_.csv");
         return output_matrix;
     }
+    /**
+     * @brief Writes statistical results (mean, variance, standard deviation) to a CSV file
+     * @param output_matrix A 2D vector containing the statistical results
+     * @param filename The name of the output CSV file
+     * **/
 
     void writeStats(const std::vector<std::vector<double>>& output_matrix, const std::string& filename) {
         std::ofstream outputFile(outputDirectory + "/" + filename);
@@ -243,9 +332,9 @@ int main() {
         std::cout << "Enter the directory for output files: ";
         std::cin >> outputDirectory;
 
-        double meanReturn = 0.05;
+        double mean = 0.05;
         double stdDev = 0.2;
-        double spotPrice = 5000;
+        double spot = 5000;
         double varianceCutoff;
 
         std::cout << "Enter the variance cutoff: ";
@@ -253,9 +342,9 @@ int main() {
 
         auto start = std::chrono::high_resolution_clock::now();
 
-        Model financialModel(spotPrice, meanReturn, stdDev, inputFilename);
+        Model financialModel(spot, mean, stdDev, inputFilename);
         financialModel.setOutputDirectory(outputDirectory);
-        financialModel.runModel(50000, spotPrice, varianceCutoff);
+        financialModel.runModel(50000, spot, varianceCutoff);
 
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
