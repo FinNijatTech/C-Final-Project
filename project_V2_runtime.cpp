@@ -277,12 +277,12 @@ public:
             output_matrix.push_back({static_cast<double>(partialOptions.size()), mean, variance, stdDeviation});
 
             std::cout << "Option Processed: " << partialOptions.size()
-                      << ", Mean: " << mean
-                      << ", Variance: " << variance
+                      << ", Mean: " << mean // Output statistics for each option set
+                      << ", Variance: " << variance     // Output statistics for each option set
                       << ", Standard Deviation: " << stdDeviation << std::endl;
         }
 
-        writeStats(output_matrix, "output_matrix_.csv");
+        writeStats(output_matrix, "output_matrix_.csv"); // Write statistics to a CSV file
         return output_matrix;
     }
     /**
@@ -290,6 +290,8 @@ public:
      * @param output_matrix A 2D vector containing the statistical results
      * @param filename The name of the output CSV file
      * **/
+
+// Write statistical results to a CSV file
 
     void writeStats(const std::vector<std::vector<double>>& output_matrix, const std::string& filename) {
         std::ofstream outputFile(outputDirectory + "/" + filename);
@@ -312,6 +314,8 @@ public:
             std::cerr << "Failed to open file: " << filename << std::endl;
         }
     }
+
+// Set the output directory for saving files
 
     void setOutputDirectory(const std::string& directory) {
         outputDirectory = directory;
